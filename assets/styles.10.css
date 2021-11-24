@@ -10,12 +10,23 @@
   outline: solid 4px magenta;
 }
 
+@font-face {
+  font-family: "MD System";
+  font-weight: 800;
+  src: url("/assets/fonts/MDSystem-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "MD System";
+  font-weight: 600;
+  src: url("/assets/fonts/MDSystem-Medium.woff2") format("woff2");
+}
+
 html {
   --color-primary: orangered;
   --gradient-gold-pink-angle: 160deg;
-  --gradient-gold-pink: linear-gradient(var(--gradient-gold-pink-angle), yellowgreen, seagreen);
+  --gradient-gold-pink: linear-gradient(var(--gradient-gold-pink-angle), limegreen, seagreen);
   --font-primary: "MD System";
-  font: normal 16px/1 var(--font-primary);
+  font: 600 16px/1 var(--font-primary);
 }
 body {
   background: black;
@@ -23,35 +34,6 @@ body {
   display: grid;
   grid-template-rows: min-content auto;
   min-height: 100vh;
-}
-nav {
-  background: var(--gradient-gold-pink);
-  box-shadow: 0 0px 30px deeppink;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-}
-nav a {
-  color: black;
-  padding: 1em 0.75em;
-  position: relative;
-  text-decoration: none;
-}
-nav a:not(.active):hover::before,
-nav a.active::before {
-  border: 8px solid transparent;
-  border-top: 8px solid black;
-  content: "";
-  height: 0px;
-  position: absolute;
-  top: 0px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0px;
-}
-nav a.active {
-  font-weight: bold;
 }
 .toppen {
   border-bottom: 1px solid rgb(255 255 255 / 20%);
@@ -67,7 +49,7 @@ nav a.active {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  font: 900 2rem/1.1 var(--font-primary);
+  font: 800 2rem/1.1 var(--font-primary);
 }
 form {
   display: flex;
@@ -80,7 +62,7 @@ form label {
 }
 form label span {
   color: white;
-  font: normal 1rem/1 var(--font-primary);
+  font: 600 1rem/1 var(--font-primary);
 }
 form select {
   -moz-appearance: none;
@@ -94,7 +76,7 @@ form select {
   border-radius: 4px;
   color: black;
   cursor: pointer;
-  font: bold 1rem/1.2 var(--font-primary);
+  font: 800 1rem/1.2 var(--font-primary);
   padding: 0.75em 3rem 0.75em 3rem;
 }
 form select option {
@@ -112,7 +94,7 @@ form button {
   border: 0px;
   border-radius: 14px;
   color: black;
-  font: bold 1rem/1.2 inherit;
+  font: 600 1rem/1.2 inherit;
   padding: 0.5em 1em;
 }
 main {
@@ -157,8 +139,8 @@ main {
   background: rgb(0 0 0 / 0%);
   border-radius: 32px;
   color: #fff;
-  content: "🍿 Les mer hos ODEON";
-  font: bold 1rem/1 var(--font-primary);
+  content: "Les om filmen";
+  font: 600 1rem/1 var(--font-primary);
   padding: 0.75em;
   position: absolute;
   bottom: 0;
@@ -196,7 +178,7 @@ main {
 }
 h3#showsHeading {
   color: #fff;
-  font: normal 0.875rem/1 var(--font-primary);
+  font: 600 0.875rem/1 var(--font-primary);
 }
 .shows-today li {
   color: rgba(255 255 255 / 75%);
@@ -263,7 +245,7 @@ div.error p {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  font: normal 1.5rem/1.5 var(--font-primary);
+  font: 600 1.5rem/1.5 var(--font-primary);
   text-align: center;
 }
 
