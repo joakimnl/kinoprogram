@@ -13,11 +13,13 @@
 @font-face {
   font-family: "MD System";
   font-weight: 800;
+  font-display: swap;
   src: url("/assets/fonts/MDSystem-Bold.woff2") format("woff2");
 }
 @font-face {
   font-family: "MD System";
   font-weight: 600;
+  font-display: swap;
   src: url("/assets/fonts/MDSystem-Medium.woff2") format("woff2");
 }
 
@@ -36,7 +38,7 @@ body {
   min-height: 100vh;
 }
 .toppen {
-  border-bottom: 1px solid rgb(255 255 255 / 20%);
+  border-bottom: 1px solid rgb(255 255 255 / 25%);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -204,7 +206,7 @@ h3#showsHeading {
   box-shadow: 0.5rem 0 0 black;
   color: #fff;
   line-height: 1;
-  padding: 0.4rem 0.5rem 0.4rem 2rem;
+  padding: 0.625rem 0.625rem 0.625rem 2rem;
   text-decoration: none;
 }
 .shows-today li a:hover {
