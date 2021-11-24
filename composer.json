@@ -1,0 +1,20 @@
+{
+    "name": "joakim/basic-events",
+    "description": "Basic event management!",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Joakim Næss Lea",
+            "email": "hei@joak.im"
+        }
+    ],
+    "require": {
+        "twig/twig": "^3.0",
+        "twig/intl-extra": "^3.3"
+    }
+}
