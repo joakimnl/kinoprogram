@@ -5,9 +5,7 @@
 <ul class="teaser" aria-label="Filmer">
 {% for movie in programme.movies|filter(movie => movie.shows|filter(show => date(show.utc|format_datetime(pattern="dd-MM-y")) == date(currentDay))) %}
   <li>
-    <a class="poster-img" href="https://www.odeonkino.no/film/{{ movie.mId }}/{{ movie.slug }}" aria-label="Les om {{ movie.title }} hos Odeon kino" target="_blank" rel="noreferer">
-      <img src="/assets/images/{{ movie.mId }}.jpg" aria-hidden="true" height="225" width="150" loading="lazy" alt="">
-    </a>
+    <img src="/assets/images/{{ movie.mId }}.jpg" aria-hidden="true" height="225" width="150" loading="lazy" alt="">
     <h2>{{ movie.title }}</h2>
     {% set showsToday = movie.shows|filter(show => date(show.utc|date("d-m-Y")) == date(currentDay)) %}
     {% if showsToday|length > 0 %}

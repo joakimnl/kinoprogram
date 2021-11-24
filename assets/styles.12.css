@@ -10,24 +10,11 @@
   outline: solid 4px magenta;
 }
 
-@font-face {
-  font-family: "MD System";
-  font-weight: 800;
-  font-display: swap;
-  src: url("/assets/fonts/MDSystem-Bold.woff2") format("woff2");
-}
-@font-face {
-  font-family: "MD System";
-  font-weight: 600;
-  font-display: swap;
-  src: url("/assets/fonts/MDSystem-Medium.woff2") format("woff2");
-}
-
 html {
   --color-primary: orangered;
-  --gradient-gold-pink-angle: 160deg;
+  --gradient-gold-pink-angle: 170deg;
   --gradient-gold-pink: linear-gradient(var(--gradient-gold-pink-angle), limegreen, seagreen);
-  --font-primary: "MD System";
+  --font-primary: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
   font: 600 16px/1 var(--font-primary);
 }
 body {
@@ -51,7 +38,7 @@ body {
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  font: 800 2rem/1.1 var(--font-primary);
+  font: 700 2rem/1.1 var(--font-primary);
 }
 form {
   display: flex;
@@ -115,48 +102,8 @@ main {
   align-content: start;
   gap: 0.625rem;
   max-width: 400px;
-  text-decoration: none;
-}
-.teaser a.poster-img {
-  display: block;
   position: relative;
-}
-.teaser a.poster-img::before {
-  content: "";
-  background: var(--gradient-gold-pink);
-  border-radius: 14px;
-  height: calc(100% + 8px);
-  opacity: 0;
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  transition: .15s ease-out;
-  width: calc(100% + 8px);
-  z-index: -1;
-}
-.teaser a.poster-img:hover::before {
-  opacity: 1;
-}
-.teaser a.poster-img::after {
-  background: rgb(0 0 0 / 0%);
-  border-radius: 32px;
-  color: #fff;
-  content: "Les om filmen";
-  font: 600 1rem/1 var(--font-primary);
-  padding: 0.75em;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translate(-50%);
-  transition: 0.15s;
-  z-index: -2;
-  white-space: nowrap;
-}
-.teaser a.poster-img:hover::after {
-  background: rgb(0 0 0 / 80%);
-  opacity: 1;
-  transform: translate(-50%, -1rem);
-  z-index: 1;
+  text-decoration: none;
 }
 .teaser img {
   border-radius: 14px;
@@ -165,22 +112,15 @@ main {
   width: 100%;
 }
 .teaser h2 {
-  background: var(--gradient-gold-pink), white;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  font: 600 1.8rem/1.25 var(--font-primary);
-  justify-self: start;
+  color: #21bd4f;
+  font: 500 1.75rem/1.25 var(--font-primary);
 }
+
 .shows-today {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   list-style-type: none;
-}
-h3#showsHeading {
-  color: #fff;
-  font: 600 0.875rem/1 var(--font-primary);
 }
 .shows-today li {
   color: rgba(255 255 255 / 75%);
@@ -188,14 +128,15 @@ h3#showsHeading {
   align-items: center;
   gap: 0.5rem;
   grid-template-columns: min-content 1fr;
-  font: 500 1rem/1 monospace;
+  font: 500 1rem/1 'SF Mono', SFMono-Regular, ui-monospace,
+    'DejaVu Sans Mono', Menlo, Consolas, monospace;
   text-decoration: none;
   transition: .25s;
 }
 .shows-today li.past {
   color: #999;
   text-decoration: line-through;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1px;
   text-decoration-color: #999;
 }
 
@@ -203,7 +144,6 @@ h3#showsHeading {
   background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48cGF0aCBmaWxsPSIjZmZmIiBkPSJNNDYzLjEgNDE2Yy0yNi41MSAwLTQ3LjEgMjEuNDktNDcuMSA0OHMyMS40OSA0OCA0Ny4xIDQ4czQ3LjEtMjEuNDkgNDcuMS00OFM0OTAuNSA0MTYgNDYzLjEgNDE2ek0xNzUuMSA0MTZjLTI2LjUxIDAtNDcuMSAyMS40OS00Ny4xIDQ4UzE0OS41IDUxMiAxNzUuMSA1MTJzNDcuMS0yMS40OSA0Ny4xLTQ4UzIwMi41IDQxNiAxNzUuMSA0MTZ6TTU2OS41IDQ0LjczYy02LjEwOS04LjA5NC0xNS40Mi0xMi43My0yNS41Ni0xMi43M0gxMjEuMUwxMTkuNiAxOS41MUMxMTcuNCA4LjE5IDEwNy41IDAgOTYgMEgyMy4xQzEwLjc1IDAgMCAxMC43NSAwIDIzLjFTMTAuNzUgNDggMjMuMSA0OGg1Mi4xNGw2MC4yOCAzMTYuNUMxMzguNiAzNzUuOCAxNDguNSAzODQgMTYwIDM4NEg0ODhjMTMuMjUgMCAyNC0xMC43NSAyNC0yMy4xQzUxMiAzNDYuNyA1MDEuMyAzMzYgNDg4IDMzNkgxNzkuOUwxNzAuNyAyODhoMzE4LjRjMTQuMjkgMCAyNi44NC05LjQ3IDMwLjc3LTIzLjIxbDU0Ljg2LTE5MS4xQzU3Ny41IDYzLjA1IDU3NS42IDUyLjgzIDU2OS41IDQ0LjczeiI+PC9wYXRoPjwvc3ZnPg==") 0.5rem center / 16px 16px no-repeat,
   rgb(255 255 255 / 20%);
   border-radius: 0.25rem;
-  box-shadow: 0.5rem 0 0 black;
   color: #fff;
   line-height: 1;
   padding: 0.625rem 0.625rem 0.625rem 2rem;
@@ -216,9 +156,12 @@ h3#showsHeading {
   border-color: seagreen;
   color: black;
 }
+.shows-today li > time,
+.shows-today li p {
+  font-size: 0.875rem;
+}
 .shows-today li p {
   background: linear-gradient(180deg, black calc(50% - 0.5px), rgb(255 255 255 / 25%) calc(50% - 0.5px), rgb(255 255 255 / 25%) calc(50% + 0.5px), black calc(50% + 0.5px));
-  font-size: 0.875rem;
   overflow: hidden;
   text-align: right;
   text-overflow: ellipsis;
@@ -228,7 +171,6 @@ h3#showsHeading {
   background: black;
   box-shadow: -0.5rem 0 0 black;
 }
-
 
 div.error {
   display: grid;
@@ -254,6 +196,11 @@ div.error p {
 @media (min-width: 400px) {
   form {
     gap: 1.5rem;
+  }
+  .teaser h2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 @media (min-width: 750px) {
