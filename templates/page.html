@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kinoprogram – {{ location_name|capitalize }}</title>
-    <link rel="stylesheet" href="/assets/styles.14.css" />
+    <link rel="stylesheet" href="/assets/styles.15.css" />
     <link rel="icon" href="/assets/icons/favicon-32x32.png" type="image/x-icon" />
   </head>
   <body class="no-js">
     <header class="toppen">
-      {% set niceDay = date(date) == date("now"|date("d-m-Y")) ? 'i dag' : 
-        date|format_date(pattern="EEEE d'.' MMMM", locale="no", timezone="GMT+1") %}
-      <h1>{{ location_name }} &mdash; på kino {{ niceDay }}</h1>
+      {% set niceDay = date|format_date(pattern="EEEE d'.' MMMM", locale="no", timezone="GMT+1")|capitalize %}
+      <h1>Kinoprogram &bull; {{ location_name }} <span>{{ niceDay }}</span></h1>
       <form action="{{ form_url }}" method="post">
         <select id="select-location" name="location" aria-label="Sted">
           {% for location in locations %}
@@ -25,7 +24,7 @@
           {% endif %}
           {% if dates_with_movies|length > 0 %}
           {% for day in dates_with_movies|filter(day => date(day) >= date("now"|date("d-m-Y"))) %}
-          <option value="{{ day }}" {% if date(day) == date(date) %}selected{% endif %}>{{ day|format_date(pattern="EEEE d'.' MMMM", locale="no", timezone="GMT+1")|capitalize }}</option>
+          <option value="{{ day }}" {% if date(day) == date(date) %}selected{% endif %}>{{ day|format_date(pattern="EEE d'.'M", locale="no", timezone="GMT+1")|capitalize }}</option>
           {% endfor %}
           {% endif %}
         </select>
