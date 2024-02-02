@@ -24,8 +24,6 @@ if (preg_match('/\/([A-Øa-ø()\s|-]+)\/?(\d{2}-\d{2}-\d{4})?\/?/', $request, $m
     $date = $matches[2] ?? $date;
 }
 
-
-
 $location = get_single_location($slug);
 
 switch (urldecode($request)) {
