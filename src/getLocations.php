@@ -747,6 +747,7 @@ foreach ($combos as $combo) {
           );
           if (!in_array($location_array, $locations_to_file)) {
             array_push($locations_to_file, $location_array);
+            logg("🎪 Henta kinoen i " . $location->name . "...");
           }
         }
       }

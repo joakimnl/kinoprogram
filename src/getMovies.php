@@ -9,7 +9,7 @@ foreach ($locations as $location) {
 
     logg("🍿 Henter filmer for " . $location['name'] . "...");
 
-  $get_movies = json_decode(file_get_contents('https://skynet.filmweb.no/MovieInfoQs/graphql/?query=query($location:String){movieQuery{getCurrentMovies(location:$location,removePastShows:true){mainVersionId%20title%20genres%20lengthInMinutes%20rating%20%poster{versions{url}}%20sanityImagePosterUrl%20shows{firmName%20showStart%20screenName%20ticketSaleUrl%20theaterName%20movieVersionId}}}}&variables={%22location%22:%22' . urlencode($location["name"]) . '%22}'));
+  $get_movies = json_decode(file_get_contents('https://skynet.filmweb.no/MovieInfoQs/graphql/?query=query($location:String){movieQuery{getCurrentMovies(location:$location,removePastShows:true){mainVersionId%20title%20genres%20lengthInMinutes%20rating%20poster{versions{url}}%20sanityImagePosterUrl%20shows{firmName%20showStart%20screenName%20ticketSaleUrl%20theaterName%20movieVersionId}}}}&variables={%22location%22:%22' . urlencode($location["name"]) . '%22}'));
   $results = $get_movies->data->movieQuery->getCurrentMovies;
 
   if ($get_movies && !empty($results)) {
