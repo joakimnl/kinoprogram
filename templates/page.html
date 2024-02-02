@@ -3,36 +3,39 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kinoprogram – {{ currentCinema|capitalize }}</title>
-    <link rel="stylesheet" href="/assets/styles.12.css" />
-    <link rel="icon" href="assets/icons/favicon-32x32.png" type="image/x-icon" />
+    <title>Kinoprogram – {{ location_name|capitalize }}</title>
+    <link rel="stylesheet" href="/assets/styles.14.css" />
+    <link rel="icon" href="/assets/icons/favicon-32x32.png" type="image/x-icon" />
   </head>
   <body class="no-js">
     <header class="toppen">
-      {% set niceDay = date(currentDay) == date("now"|date("d-m-Y")) ? 'i dag' : 
-        currentDay|format_date(pattern="EEEE d'.' MMMM", locale="no", timezone="GMT+1") %}
-      <h1>På kino i {{ currentCinema|capitalize }} {{ niceDay }}</h1>
-      <form action="{{ currentUrl }}" method="post">
-        <select id="select-city" name="city" aria-label="By">
-          {% for name, abbr in cinemas %}
-          <option value="{{ name }}" {% if name is same as(currentCinema) %}selected{% endif %}>{{ name|capitalize }}</option>
+      {% set niceDay = date(date) == date("now"|date("d-m-Y")) ? 'i dag' : 
+        date|format_date(pattern="EEEE d'.' MMMM", locale="no", timezone="GMT+1") %}
+      <h1>{{ location_name }} &mdash; på kino {{ niceDay }}</h1>
+      <form action="{{ form_url }}" method="post">
+        <select id="select-location" name="location" aria-label="Sted">
+          {% for location in locations %}
+          <option value="{{ location.slug }}" {% if location.name is same as(location_name) %}selected{% endif %}>{{ location.name }}</option>
           {% endfor %}
         </select>
-      
-        <select id="select-date" name="date" data-cinema="{{ currentCinema }}" aria-label="Dato">
-          {% if currentDay not in programme.days %}
+        
+        <select id="select-date" name="date" data-location="{{ location_slug }}" aria-label="Dato">
+          {% if date not in dates_with_movies %}
           <option>Velg dag</option>
           {% endif %}
-          {% for day in programme.days|filter(day => date(day) >= date("now"|date("d-m-Y"))) %}
-          <option value="{{ day }}" {% if date(day) == date(currentDay) %}selected{% endif %}>{{ day|format_date(pattern="EEEE d'.' MMMM", locale="no", timezone="GMT+1")|capitalize }}</option>
+          {% if dates_with_movies|length > 0 %}
+          {% for day in dates_with_movies|filter(day => date(day) >= date("now"|date("d-m-Y"))) %}
+          <option value="{{ day }}" {% if date(day) == date(date) %}selected{% endif %}>{{ day|format_date(pattern="EEEE d'.' MMMM", locale="no", timezone="GMT+1")|capitalize }}</option>
           {% endfor %}
+          {% endif %}
         </select>
+        
       </form>
     </header>
     <main>
       {% block content %}
       {% endblock %}
     </main>
-    <script src="/assets/scripts.1.js"></script>
+    <script src="/assets/scripts.2.js"></script>
   </body>
 </html>

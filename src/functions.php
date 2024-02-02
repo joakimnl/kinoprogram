@@ -1,56 +1,78 @@
 <?php
-if ($_SERVER['SERVER_ADDR'] === '127.0.0.1' ) {
-  define('WWW_DIR', '/Users/joakim/Utvikling/kinoprogram');
-} else {
-  define('WWW_DIR', '/home/5/k/kinoprogram/www');
+define('WWW_DIR', dirname(dirname(__FILE__)));
+
+function get_locations() {
+  $locations = json_decode(file_get_contents(WWW_DIR . '/src/locations.json'), true);
+  uasort($locations, function($a, $b) {
+    return strcmp($a["name"], $b["name"]);
+  });
+  return $locations;
 }
 
-const CINEMAS = array(
-  "stavanger" => "ST",
-  "sandnes" => "SA",
-  "lillestrøm" => "LI",
-  "moss" => "MO",
-  "oslo" => "OS",
-  "sandvika" => "SN",
-  "sarpsborg" => "SB",
-  "ski" => "SI" ,
-  "skien" => "SK", 
-  "sotra" => "SO",  
-  "ålesund" => "AL" 
-);
+function get_single_location($slug) {
+  $locations = get_locations();
+  $location = array_filter($locations, function($location) use($slug){
+    return $location["slug"] === $slug;
+  });
 
-function cinemaProps($cinema, $day) {
-  $result = array(
-    'currentCinema' => $cinema,
-    'cityCode' => CINEMAS[$cinema],
-    'programme' => getMoviesJson($cinema, $day), 
-    'cinemas' => CINEMAS,
-    'currentUrl' => trim($_SERVER['PHP_SELF'], "/"),
-    'currentDay' => $day
+  if (!empty($location)) {
+    return array_values($location)[0];
+  }
+
+  return false;
+}
+
+function location_info($location, $date) {
+  $movies = get_movies($location["slug"]);
+  return array(
+    'location_name' => $location["name"],
+    'location_slug' => $location["slug"],
+    'programme' => $movies,
+    'date' => $date,
+    'dates_with_movies' => get_dates_with_movies($movies),
+    'form_url' => trim($_SERVER['PHP_SELF'], "/"),
+    'locations' => get_locations()
   );
-  return $result;
 }
 
-function getMoviesJson($city, $day = "") {
-  $results = json_decode(file_get_contents(WWW_DIR."/assets/movies/$city.json"));
-  $days = (array) $results->days;
-  if (isset($day)) {
-    $movies = array_filter((array) $results->movies, function($value) use($day) {
-      foreach ($value->shows as $show) {
-        if (date("d-m-Y", strtotime($show->utc)) === $day) {
-          return date("d-m-Y", strtotime($show->utc)) === $day;
+function get_movies($slug) {
+  $file = WWW_DIR.'/assets/locations/' . $slug . '.json';
+  if (file_exists($file)) {
+    $results = json_decode(file_get_contents($file));
+    return $results;
+  } else {
+    return false;
+  }
+}
+
+function get_dates_with_movies($movies) {
+  $dates_with_movies = [];
+
+  if ($movies) {
+    foreach ($movies as $movie) {
+      foreach ($movie->shows as $show) {
+        $date = date("d-m-Y", strtotime($show->showStart));
+        if (!in_array($date, $dates_with_movies)) {
+          array_push($dates_with_movies, $date);
         }
       }
-    });
-    
-    return array(
-      "movies" => (array) $movies,
-      "days" => $days
-    );
+    }
   }
-  return array(
-    "movies" => (array) $results->movies,
-    "days" => $days
-  );
+
+  usort($dates_with_movies, function($a, $b) {
+    return strtotime($a) - strtotime($b);
+  });
+
+  return $dates_with_movies;
 }
 
+function get_slug($location) {
+  return str_replace(" ", "-", mb_strtolower($location));
+};
+
+function logg($message)
+{
+    $message = date("H:i:s") . " $message".PHP_EOL;
+    print($message);
+    flush();
+}

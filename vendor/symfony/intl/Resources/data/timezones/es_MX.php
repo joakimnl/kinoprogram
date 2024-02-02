@@ -3,9 +3,7 @@
 return [
     'Names' => [
         'Africa/Bujumbura' => 'hora de África central (Buyumbura)',
-        'Africa/Conakry' => 'hora del meridiano de Greenwich (Conakri)',
         'Africa/Dar_es_Salaam' => 'hora de África oriental (Dar es-Salaam)',
-        'Africa/Khartoum' => 'hora de África central (Jartum)',
         'America/Rio_Branco' => 'Hora de Acre (Rio Branco)',
         'Asia/Almaty' => 'hora de Kazajistán oriental (Almatý)',
         'Asia/Aqtobe' => 'hora de Kazajistán occidental (Aktobé)',
@@ -17,6 +15,5 @@ return [
         'Pacific/Tarawa' => 'hora de las Islas Gilbert (Tarawa)',
         'Pacific/Wake' => 'hora de la Isla Wake',
     ],
-    'Meta' => [
-    ],
+    'Meta' => [],
 ];

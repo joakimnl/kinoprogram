@@ -2,13 +2,61 @@
 
 return [
     'Names' => [
-        'CAD' => [
-            0 => '$',
-            1 => 'Canadian Dollar',
+        'BMD' => [
+            'BMD',
+            'Bermudian Dollar',
         ],
-        'VES' => [
-            0 => 'VES',
-            1 => 'Venezuelan Bolívar',
+        'BYB' => [
+            'BYB',
+            'Belarusian New Rouble (1994–1999)',
+        ],
+        'BYN' => [
+            'BYN',
+            'Belarusian Rouble',
+        ],
+        'BYR' => [
+            'BYR',
+            'Belarusian Rouble (2000–2016)',
+        ],
+        'CAD' => [
+            '$',
+            'Canadian Dollar',
+        ],
+        'JPY' => [
+            'JP¥',
+            'Japanese Yen',
+        ],
+        'LVR' => [
+            'LVR',
+            'Latvian Rouble',
+        ],
+        'RUB' => [
+            'RUB',
+            'Russian Rouble',
+        ],
+        'RUR' => [
+            'RUR',
+            'Russian Rouble (1991–1998)',
+        ],
+        'SHP' => [
+            'SHP',
+            'Saint Helena Pound',
+        ],
+        'STN' => [
+            'STN',
+            'São Tomé and Príncipe Dobra',
+        ],
+        'TJR' => [
+            'TJR',
+            'Tajikistani Rouble',
+        ],
+        'TTD' => [
+            'TTD',
+            'Trinidad and Tobago Dollar',
+        ],
+        'USD' => [
+            'US$',
+            'US Dollar',
         ],
     ],
 ];
