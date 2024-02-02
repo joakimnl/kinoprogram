@@ -14,14 +14,17 @@ $twig->getExtension(\Twig\Extension\CoreExtension::class)->setTimezone('Europe/O
 $request = urldecode($_SERVER['REQUEST_URI']);
 
 $slug = "stavanger";
-$date = date("d-m-Y");
+
+$datetime = new DateTime();
+$date = $_POST["date"] ?? $datetime->setTimezone(new DateTimeZone("Europe/Oslo"))
+    ->format('d-m-Y');
 
 if (preg_match('/\/([A-Øa-ø()\s|-]+)\/?(\d{2}-\d{2}-\d{4})?\/?/', $request, $matches)) {
     $slug = $matches[1];
     $date = $matches[2] ?? $date;
 }
 
-$date = $_POST["date"] ?? $date;
+
 
 $location = get_single_location($slug);
 
