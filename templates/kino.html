@@ -3,7 +3,7 @@
 {% block content %}
 
 {% if programme|length > 0 and date in dates_with_movies %}
-<ul class="teaser" aria-label="Filmer">
+<ul class="teaser" role="list" aria-label="Kinoprogram">
     {% for movie in programme|filter(movie => movie.shows|filter(show =>
     date(show.showStart|format_datetime(pattern="dd-MM-y")) == date(date))) %}
     <li>
@@ -12,19 +12,19 @@
         <h2>{{ movie.title }}</h2>
         {% set showsToday = movie.shows|filter(show => date(show.showStart|date("d-m-Y")) == date(date)) %}
         {% if showsToday|length > 0 %}
-        <ul class="shows-today" aria-label="Forestillinger">
+        <ul class="shows-today" role="list" aria-label="Dagens visninger av {{ movie.title }}">
             {% for show in showsToday %}
-            <li class="{{ date(" now"|date("d-m-Y H:i"))> date(show.showStart|date("d-m-Y H:i")) ? 'past' : '' }}">
+            <li aria-label="Klokken {{show.showStart|date("H.i")}} i {{ show.screenName}}" class="{{ date("now"|date("d-m-Y H:i")) > date(show.showStart|date("d-m-Y H:i")) ? 'past' : '' }}">
                 {% if date("now"|date("d-m-Y H:i")) > date(show.showStart|date("d-m-Y H:i")) %}
-                <time datetime="{{ show.showStart|date(" c") }}">{{ show.showStart|date("H:i") }}</time>
+                {{ show.showStart|date("H:i") }}
                 {% elseif show.ticketSaleUrl %}
-                <a href="{{ show.ticketSaleUrl }}" rel="noreferrer" target="_blank">
-                    <time datetime="{{ show.showStart|date(" c") }}">{{ show.showStart|date("H:i") }}</time>
+                <a href="{{ show.ticketSaleUrl }}" aria-label="Kjøp billett (ekstern side)" rel="noreferrer">
+                    {{ show.showStart|date("H:i") }}
                 </a>
                 {% else %}
-                <time datetime="{{ show.showStart|date(" c") }}">{{ show.showStart|date("H:i") }}</time>
+                    {{ show.showStart|date("H:i") }}
                 {% endif %}
-                <p><span>{{ show.screenName }}</span></p>
+                <p aria-hidden="true"><span>{{ show.screenName }}</span></p>
             </li>
             {% endfor %}
         </ul>
