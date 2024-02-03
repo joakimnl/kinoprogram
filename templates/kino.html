@@ -2,28 +2,38 @@
 
 {% block content %}
 
-{% if programme|length > 0 and date in dates_with_movies %}
-<ul class="teaser" role="list" aria-label="Kinoprogram">
-    {% for movie in programme|filter(movie => movie.shows|filter(show =>
-    date(show.showStart|format_datetime(pattern="dd-MM-y")) == date(date))) %}
-    <li>
+{% set movies = programme|filter(movie => movie.shows|filter(show => 
+    date(show.showStart|date("d-m-Y")) == date(date) and date(show.showStart|date("d-m-Y H:i")) > date("now"))) %}
+
+
+{% if movies|length > 0 and date in dates_with_movies %}
+
+
+<ul class="movies" role="list" aria-label="Filmer på kino nå">
+
+
+    {% for movie in movies %}
+
+    {% set shows = movie.shows|filter(show => date(show.showStart|date("d-m-Y")) == date(date)) %}
+    
+    <li class="movie">
+
+        {% set loading = loop.index > 5 ? 'lazy' : 'eager' %}
+
         <img src="/assets/images/{{ movie.mainVersionId }}.webp" aria-hidden="true" height="225" width="150"
-            loading="lazy" alt="">
+            loading="{{ loading }}" alt="">
+        
         <h2>{{ movie.title }}</h2>
-        {% set showsToday = movie.shows|filter(show => date(show.showStart|date("d-m-Y")) == date(date)) %}
-        {% if showsToday|length > 0 %}
-        <ul class="shows-today" role="list" aria-label="Dagens visninger av {{ movie.title }}">
-            {% for show in showsToday %}
-            <li aria-label="Klokken {{show.showStart|date("H.i")}} i {{ show.screenName}}" class="{{ date("now"|date("d-m-Y H:i")) > date(show.showStart|date("d-m-Y H:i")) ? 'past' : '' }}">
-                {% if date("now"|date("d-m-Y H:i")) > date(show.showStart|date("d-m-Y H:i")) %}
-                {{ show.showStart|date("H:i") }}
-                {% elseif show.ticketSaleUrl %}
+       
+        {% if shows|length > 0 %}
+
+        
+        <ul class="shows" role="list" aria-label="Dagens visninger av {{ movie.title }}">
+            {% for show in shows %}
+            <li aria-label="Visning {{show.showStart|date("H.i")}} i {{ show.screenName}}">
                 <a href="{{ show.ticketSaleUrl }}" aria-label="Kjøp billett (ekstern side)" rel="noreferrer">
                     {{ show.showStart|date("H:i") }}
                 </a>
-                {% else %}
-                    {{ show.showStart|date("H:i") }}
-                {% endif %}
                 <p aria-hidden="true"><span>{{ show.screenName }}</span></p>
             </li>
             {% endfor %}
@@ -35,16 +45,7 @@
 
 {% elseif dates_with_movies|length > 0 %}
 <div class="error">
-    <p>Ingen filmer på programmet her i dag!</p>
-    <ul>
-        <li>Prøv gjerne en annen dag</li>
-        {% for date in dates_with_movies %}
-        <li>
-            <a href="/{{ location_slug }}/{{ date }}">{{ date|format_date(pattern="EEEE d'.' MMMM", locale="no",
-                timezone="GMT+1") }}</a>
-        </li>
-        {% endfor %}
-    </ul>
+    <p>Ingen filmer på kino nå.</p>
 </div>
 
 {% else %}
@@ -52,4 +53,5 @@
     <p>{{ location_name }} har ingen filmer på programmet – som vi vet om, i alle fall!</p>
 </div>
 {% endif %}
+
 {% endblock %}

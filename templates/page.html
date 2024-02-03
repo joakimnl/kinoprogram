@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kinoprogram – {{ location_name|capitalize }}</title>
-    <link rel="stylesheet" href="/assets/styles.16.css" />
+    <link rel="stylesheet" href="/assets/styles.17.css" />
     <link rel="icon" href="/assets/icons/favicon-32x32.png" type="image/x-icon" />
   </head>
   <body class="no-js">
-    <header role="banner" class="toppen">
+    <header role="banner">
       {% set niceDay = date|format_date(pattern="EEEE d'.' MMMM", locale="no", timezone="GMT+1")|capitalize %}
       <div>
         <h1 aria-label="{{ location_name }} — {{ niceDay }}">
@@ -38,10 +38,10 @@
       </form>
     </nav>
     </header>
-    <main role="main">
-      {% block content %}
-      {% endblock %}
-    </main>
+    
+    
+    {% block content %}{% endblock %}
+    
     <script src="/assets/scripts.2.js"></script>
   </body>
 </html>

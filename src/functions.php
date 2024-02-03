@@ -62,7 +62,7 @@ function get_dates_with_movies($movies) {
   usort($dates_with_movies, function($a, $b) {
     return strtotime($a) - strtotime($b);
   });
-
+  
   return $dates_with_movies;
 }
 
