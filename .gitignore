@@ -2,4 +2,3 @@
 .DS_Store
 data/posters/*.webp
 data/locations/*.json
-!data/locations/all_locations.json

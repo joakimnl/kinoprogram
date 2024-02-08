@@ -2,8 +2,11 @@
 
 {% block content %}
 
-{% set movies = programme|filter(movie => movie.shows|filter(show => 
-    date(show.showStart|date("d-m-Y")) == date(date) and date(show.showStart|date("d-m-Y H:i")) > date("now"))) %}
+
+{% if programme is defined %}
+    {% set movies = programme|filter(movie => movie.shows|filter(show => 
+        date(show.showStart|date("d-m-Y")) == date(date) and date(show.showStart|date("d-m-Y H:i")) > date("now"))) %}
+{% endif %}
 
 
 {% if movies|length > 0 and date in dates_with_movies %}
@@ -20,7 +23,7 @@
 
         {% set loading = loop.index > 5 ? 'lazy' : 'eager' %}
 
-        <img src="/assets/images/{{ movie.mainVersionId }}.webp" aria-hidden="true" height="225" width="150"
+        <img src="{{ '/data/posters/' ~ movie.mainVersionId }}.webp" aria-hidden="true" height="225" width="150"
             loading="{{ loading }}" alt="">
         
         <h2>{{ movie.title }}</h2>
@@ -31,9 +34,13 @@
         <ul class="shows" role="list" aria-label="Dagens visninger av {{ movie.title }}">
             {% for show in shows %}
             <li aria-label="Visning {{show.showStart|date("H.i")}} i {{ show.screenName}}">
+                {% if show.ticketSaleUrl is not empty %}
                 <a href="{{ show.ticketSaleUrl }}" aria-label="Kjøp billett (ekstern side)" rel="noreferrer">
                     {{ show.showStart|date("H:i") }}
                 </a>
+                {% else %}
+                {{ show.showStart|date("H:i") }}
+                {% endif %}
                 <p aria-hidden="true"><span>{{ show.screenName }}</span></p>
             </li>
             {% endfor %}
@@ -43,15 +50,11 @@
     {% endfor %}
 </ul>
 
-{% elseif dates_with_movies|length > 0 %}
+{% else dates_with_movies|length > 0 %}
 <div class="error">
-    <p>Ingen flere filmer på programmet i dag</p>
+    <p>Her var det ingen filmer, gitt.</p>
 </div>
 
-{% else %}
-<div class="error">
-    <p>{{ location_name }} har ingen filmer på programmet – som vi vet om, i alle fall!</p>
-</div>
 {% endif %}
 
 {% endblock %}

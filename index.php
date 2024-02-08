@@ -16,8 +16,10 @@ $request = urldecode($_SERVER['REQUEST_URI']);
 $slug = "stavanger";
 
 $datetime = new DateTime();
-$date = $_POST["date"] ?? $datetime->setTimezone(new DateTimeZone("Europe/Oslo"))
+$date = $datetime->setTimezone(new DateTimeZone("Europe/Oslo"))
     ->format('d-m-Y');
+
+
 
 if (preg_match('/\/([A-Øa-ø()\s|-]+)\/?(\d{2}-\d{2}-\d{4})?\/?/', $request, $matches)) {
     $slug = $matches[1];

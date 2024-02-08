@@ -10,7 +10,8 @@
   </head>
   <body class="no-js">
     <header role="banner">
-      {% set niceDay = date|format_date(pattern="EEEE d'.' MMMM", locale="no", timezone="GMT+1")|capitalize %}
+
+      {% set niceDay = date|format_date(pattern="EEEE d'.' MMMM", locale="no")|capitalize %}
       <div>
         <h1 aria-label="{{ location_name }} — {{ niceDay }}">
             {{ location_name }}
@@ -26,14 +27,18 @@
         </select>
         
         <select id="select-date" name="date" data-location="{{ location_slug }}" aria-label="Dato">
-          {% if date not in dates_with_movies %}
-          <option>Velg dag</option>
-          {% endif %}
-          {% if dates_with_movies|length > 0 %}
-          {% for day in dates_with_movies|filter(day => date(day) >= date("now"|date("d-m-Y"))) %}
-          <option value="{{ day }}" {% if date(day) == date(date) %}selected{% endif %}>{{ day|format_date(pattern="EEE d'.'M", locale="no", timezone="GMT+1")|capitalize }}</option>
-          {% endfor %}
-          {% endif %}
+       
+        {% if date not in dates_with_movies %}
+            <option>Velg dag</option>
+        {% endif %}
+       
+        {% if dates_with_movies|length > 0 %}
+       
+            {% for day in dates_with_movies|filter(day => date(day) >= date("now"|date("d-m-Y"))) %}
+                <option value="{{ day }}" {% if date(day) == date(date) %}selected{% endif %}>{{ day|format_date(pattern="EEE d'.'M", locale="no")|capitalize }}</option>
+            {% endfor %}
+       
+        {% endif %}
         </select>
         
       </form>
