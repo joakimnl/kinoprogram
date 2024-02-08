@@ -3,7 +3,7 @@
 {% block content %}
 
 
-{% if programme is defined %}
+{% if programme is not empty %}
     {% set movies = programme|filter(movie => movie.shows|filter(show => 
         date(show.showStart|date("d-m-Y")) == date(date) and date(show.showStart|date("d-m-Y H:i")) > date("now"))) %}
 {% endif %}
