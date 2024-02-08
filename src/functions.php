@@ -38,20 +38,28 @@ function get_single_location($slug) {
 }
 
 function location_info($location, $date) {
-  $movies = get_movies($location["slug"]);
-  return array(
-    'location_name' => $location["name"],
-    'location_slug' => $location["slug"],
-    'programme' => $movies,
-    'date' => $date,
-    'dates_with_movies' => get_dates_with_movies($movies),
-    'form_url' => trim($_SERVER['PHP_SELF'], "/"),
-    'locations' => get_locations()
-  );
+    $location_info = array(
+        'location_name' => $location["name"],
+        'location_slug' => $location["slug"],
+        'date' => $date,
+        'form_url' => trim($_SERVER['PHP_SELF'], "/"),
+        'locations' => get_locations(),
+        'programme' => null,
+        'dates_with_movies' => null
+    );
+    $movies = get_movies($location["slug"]);
+
+    if ($movies) {
+        $location_info['programme'] = $movies;
+        $location_info['dates_with_movies'] = get_dates_with_movies($movies);
+    } 
+    
+    return $location_info;
 }
 
 function get_movies($slug) {
   $file = LOCATIONS_DIR . $slug . '.json';
+
   if (file_exists($file)) {
     $results = json_decode(file_get_contents($file));
     return $results;
