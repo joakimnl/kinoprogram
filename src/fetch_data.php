@@ -780,9 +780,9 @@ foreach ($letter_combos as $combo) {
                     );
                    
                     if (!in_array($location_array, $all_locations)) {
+                        
                         array_push($all_locations, $location_array);
-                        logg("🎪 Fant kino i " . $location->name . "...");
-
+                        
                         /**
                          * Hent filmer for denne kinoen
                          */
@@ -805,7 +805,7 @@ foreach ($letter_combos as $combo) {
                         
                                     if (!file_exists($filename)) {
                         
-                                        logg("   🎑 Laster ned plakat til " . $movie->title . "...");
+                                        logg("– Laster ned plakat til " . $movie->title . "...");
                         
                                         $poster_url = preg_replace('/auto=format/', 'fm=webp', $movie->sanityImagePosterUrl);
                             
@@ -826,7 +826,7 @@ foreach ($letter_combos as $combo) {
                                     }
                         
                                 } else {
-                                    logg("   ❌ Fikk ikke tak i plakat til " . $movie->title . "...");
+                                    //logg("– Fikk ikke tak i plakat til " . $movie->title . "...");
                                 }
                         
                             }
