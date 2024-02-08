@@ -22,14 +22,28 @@ foreach ($locations as $location) {
 
       if (!empty($movie->sanityImagePosterUrl)) {
 
-        $filename = WWW_DIR . "/assets/images/".$movie->mainVersionId.".webp";
+        $filename = IMG_DIR . $movie->mainVersionId . ".webp";
 
         if (!file_exists($filename)) {
 
             logg("   🎑 Laster ned plakat til " . $movie->title . "...");
 
-            file_put_contents($filename, file_get_contents(preg_replace('/auto=format/', 'fm=webp', $movie->sanityImagePosterUrl)));
+            $url = preg_replace('/auto=format/', 'fm=webp', $movie->sanityImagePosterUrl);
 
+            list($width, $height) = getimagesize($url);
+
+            $new_width = 450;
+            $ratio = $height / $width;
+            $new_height = intval($new_width * $ratio);
+
+            $image_p = imagecreatetruecolor($new_width, $new_height);
+            $image = imagecreatefromwebp($url);
+            imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+
+            imagewebp($image_p, IMG_DIR . $movie->mainVersionId . ".webp", 50);
+
+            imagedestroy($image);
+            imagedestroy($image_p);
         }
 
       } else {

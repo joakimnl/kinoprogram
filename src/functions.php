@@ -1,12 +1,26 @@
 <?php
 define('WWW_DIR', dirname(dirname(__FILE__)));
+define('IMG_DIR', WWW_DIR . "/assets/images/");
+define('LOCATIONS_DIR', WWW_DIR . "/assets/locations/");
 
 function get_locations() {
-  $locations = json_decode(file_get_contents(WWW_DIR . '/src/locations.json'), true);
+  $locations = json_decode(file_get_contents(WWW_DIR . '/assets/all_locations.json'), true);
   uasort($locations, function($a, $b) {
     return strcmp($a["name"], $b["name"]);
   });
   return $locations;
+}
+
+function delete_old_locations($threshold = '') {
+    $files = glob(LOCATIONS_DIR . '*.json');
+  
+    foreach ($files as $file) {
+        if (is_file($file)) {
+            if (strtotime($threshold) >= filemtime($file)) {
+                unlink($file);
+            }
+        }
+    }
 }
 
 function get_single_location($slug) {

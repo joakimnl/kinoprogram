@@ -1,4 +1,5 @@
-.DS_Store
-assets/images
-assets/locations
 .vscode/settings.json
+.DS_Store
+assets/images/
+assets/locations/
+assets/all_locations.json
