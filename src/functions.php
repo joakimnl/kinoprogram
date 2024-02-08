@@ -1,10 +1,10 @@
 <?php
 define('WWW_DIR', dirname(dirname(__FILE__)));
-define('IMG_DIR', WWW_DIR . "/assets/images/");
-define('LOCATIONS_DIR', WWW_DIR . "/assets/locations/");
+define('IMG_DIR', WWW_DIR . "/data/posters/");
+define('LOCATIONS_DIR', WWW_DIR . "/data/locations/");
 
 function get_locations() {
-  $locations = json_decode(file_get_contents(WWW_DIR . '/assets/all_locations.json'), true);
+  $locations = json_decode(file_get_contents(LOCATIONS_DIR . '/all_locations.json'), true);
   uasort($locations, function($a, $b) {
     return strcmp($a["name"], $b["name"]);
   });
@@ -12,7 +12,8 @@ function get_locations() {
 }
 
 function delete_old_locations($threshold = '') {
-    $files = glob(LOCATIONS_DIR . '*.json');
+    
+    $files = preg_grep('/all_locations\.json$/', glob(LOCATIONS_DIR . '*.json'), PREG_GREP_INVERT);
   
     foreach ($files as $file) {
         if (is_file($file)) {
@@ -50,7 +51,7 @@ function location_info($location, $date) {
 }
 
 function get_movies($slug) {
-  $file = WWW_DIR.'/assets/locations/' . $slug . '.json';
+  $file = LOCATIONS_DIR . $slug . '.json';
   if (file_exists($file)) {
     $results = json_decode(file_get_contents($file));
     return $results;

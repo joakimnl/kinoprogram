@@ -1,5 +1,5 @@
 .vscode/settings.json
 .DS_Store
-assets/images/*.webp
-assets/locations/*.json
-assets/all_locations.json
+data/posters/*.webp
+data/locations/*.json
+!data/locations/all_locations.json

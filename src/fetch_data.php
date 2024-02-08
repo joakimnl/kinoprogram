@@ -793,7 +793,7 @@ foreach ($letter_combos as $combo) {
                       
                         if ($query_result && !empty($movies)) {
                       
-                            $location_json = WWW_DIR . '/assets/locations/' . $location_array['slug'] . '.json';
+                            $location_json = LOCATIONS_DIR . $location_array['slug'] . '.json';
                       
                             file_put_contents($location_json, json_encode($movies));
                       
@@ -839,5 +839,5 @@ foreach ($letter_combos as $combo) {
     }
 }
 
-file_put_contents( WWW_DIR . '/assets/all_locations.json', json_encode($all_locations));
+file_put_contents( LOCATIONS_DIR . 'all_locations.json', json_encode($all_locations));
 delete_old_locations('-1 day 5 minutes');
