@@ -50,7 +50,7 @@
     {% endfor %}
 </ul>
 
-{% else dates_with_movies|length > 0 %}
+{% elseif dates_with_movies|length > 0 %}
 <div class="error">
     <p>Her var det ingen filmer, gitt.</p>
 </div>
