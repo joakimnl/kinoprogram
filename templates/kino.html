@@ -1,11 +1,49 @@
 {% extends "page.html" %}
 
+{% block header %}
+
+{% set niceDay = date|format_date(pattern="EEEE d'.' MMMM", locale="no")|capitalize %}
+<div>
+  <h1 aria-label="{{ location_name }} — {{ niceDay }}">
+    {{ location_name }}
+    <span aria-hidden="true">{{ niceDay }}</span>
+  </h1>
+</div>
+<nav>
+  <form action="{{ form_url }}" method="post">
+    <select id="select-location" name="location" aria-label="Sted">
+      {% for location in locations %}
+      <option value="{{ location.slug }}" {% if location.name is same as(location_name) %}selected{% endif %}>{{
+        location.name }}</option>
+      {% endfor %}
+    </select>
+
+    <select id="select-date" name="date" data-location="{{ location_slug }}" data-current-date="{{ date }}" aria-label="Dato">
+
+      {% if date not in dates_with_movies %}
+      <option value="{{ date }}">Velg dag</option>
+      {% endif %}
+
+      {% if dates_with_movies|length > 0 %}
+
+      {% for day in dates_with_movies|filter(day => date(day) >= date("now"|date("d-m-Y"))) %}
+      <option value="{{ day }}" {% if date(day)==date(date) %}selected{% endif %}>{{ day|format_date(pattern="EEE
+        d'.'M", locale="no")|capitalize }}</option>
+      {% endfor %}
+
+      {% endif %}
+    </select>
+
+  </form>
+</nav>
+
+{% endblock %}
+
 {% block content %}
 
-
 {% if programme is not empty %}
-    {% set movies = programme|filter(movie => movie.shows|filter(show => 
-        date(show.showStart|date("d-m-Y")) == date(date) and date(show.showStart|date("d-m-Y H:i")) > date("now"))) %}
+{% set movies = programme|filter(movie => movie.shows|filter(show =>
+date(show.showStart|date("d-m-Y")) == date(date) and date(show.showStart|date("d-m-Y H:i")) > date("now"))) %}
 {% endif %}
 
 
@@ -15,44 +53,44 @@
 <ul class="movies" role="list" aria-label="Filmer på kino nå">
 
 
-    {% for movie in movies %}
+  {% for movie in movies %}
 
-    {% set shows = movie.shows|filter(show => date(show.showStart|date("d-m-Y")) == date(date)) %}
-    
-    <li class="movie">
+  {% set shows = movie.shows|filter(show => date(show.showStart|date("d-m-Y")) == date(date)) %}
 
-        {% set loading = loop.index > 5 ? 'lazy' : 'eager' %}
+  <li class="movie">
 
-        <img src="{{ '/data/posters/' ~ movie.mainVersionId }}.webp" aria-hidden="true" height="225" width="150"
-            loading="{{ loading }}" alt="">
-        
-        <h2>{{ movie.title }}</h2>
-       
-        {% if shows|length > 0 %}
+    {% set loading = loop.index > 5 ? 'lazy' : 'eager' %}
 
-        
-        <ul class="shows" role="list" aria-label="Dagens visninger av {{ movie.title }}">
-            {% for show in shows %}
-            <li aria-label="Visning {{show.showStart|date("H.i")}} i {{ show.screenName}}">
-                {% if show.ticketSaleUrl is not empty %}
-                <a href="{{ show.ticketSaleUrl }}" aria-label="Kjøp billett (ekstern side)" rel="noreferrer">
-                    {{ show.showStart|date("H:i") }}
-                </a>
-                {% else %}
-                {{ show.showStart|date("H:i") }}
-                {% endif %}
-                <p aria-hidden="true"><span>{{ show.screenName }}</span></p>
-            </li>
-            {% endfor %}
-        </ul>
+    <img src="{{ '/data/posters/' ~ movie.mainVersionId }}.webp" aria-hidden="true" height="225" width="150"
+      loading="{{ loading }}" alt="">
+
+    <h2>{{ movie.title }}</h2>
+
+    {% if shows|length > 0 %}
+
+
+    <ul class="shows" role="list" aria-label="Dagens visninger av {{ movie.title }}">
+      {% for show in shows %}
+      <li aria-label="Visning {{show.showStart|date(" H.i")}} i {{ show.screenName}}">
+        {% if show.ticketSaleUrl is not empty %}
+        <a href="{{ show.ticketSaleUrl }}" aria-label="Kjøp billett (ekstern side)" rel="noreferrer">
+          {{ show.showStart|date("H:i") }}
+        </a>
+        {% else %}
+        {{ show.showStart|date("H:i") }}
         {% endif %}
-    </li>
-    {% endfor %}
+        <p aria-hidden="true"><span>{{ show.screenName }}</span></p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </li>
+  {% endfor %}
 </ul>
 
 {% elseif dates_with_movies|length > 0 %}
 <div class="error">
-    <p>Her var det ingen filmer, gitt.</p>
+  <p>Her var det ingen filmer, gitt.</p>
 </div>
 
 {% endif %}

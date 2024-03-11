@@ -5,9 +5,11 @@ const locationPicker = document.querySelector("#select-location");
 const datePicker = document.querySelector("#select-date");
 
 locationPicker.addEventListener('change', (event) => {
-  location.href = "/" + event.target.value + "/" + datePicker.value;
+  location = "/" + event.target.value + "/" + datePicker.value;
 });
 
 datePicker.addEventListener('change', (event) => {
-  location.href = "/" + locationPicker.value + "/" + event.target.value;
+  location = "/" + locationPicker.value + "/" + event.target.value;
 });
+
+datePicker.value = datePicker.getAttribute("data-current-date");

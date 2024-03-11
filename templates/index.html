@@ -1,13 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Kinoprogram – {{ location_name|capitalize }}</title>
-    <link rel="stylesheet" href="/assets/styles.12.css" />
-    <link rel="icon" href="assets/icons/favicon-32x32.png" type="image/x-icon" />
-  </head>
-  <body class="no-js">
-    <script src="/assets/scripts.1.js"></script>
-  </body>
-</html>
+{% extends "page.html" %}
+
+{% block header %}
+<h1>Kinoprogram</h1>
+{% endblock %}
+
+{% block content %} 
+
+
+<div class="cinema-picker">
+    <ul role="list">
+        <li><a href="/stavanger">Stavanger</a></li>
+        <li><a href="/bergen">Bergen</a></li>
+        <li><a href="/trondheim">Trondheim</a></li>
+        <li><a href="/oslo">Oslo</a></li>
+        <li><a href="/oslo-og-omegn">Oslo og omegn</a></li>
+        <li><a href="/sandvika">Sandvika</a></li>
+        <li><a href="/lillestrøm">Lillestrøm</a></li>
+        <li><a href="/ski">Ski</a></li>
+        <li><a href="/tromsø">Tromsø</a></li>
+        <li><a href="/kirkenes">Kirkenes</a></li>
+        <li><a href="/haugesund">Haugesund</a></li>
+        <li><a href="/drammen">Drammen</a></li>
+    </ul>
+
+    <ul role="list">
+        <li><a href="/sandnes">Sandnes</a></li>
+        {% for location in locations %}
+        <li><a href="/{{ location.slug }}">{{ location.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

@@ -1,53 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="no">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kinoprogram – {{ location_name|capitalize }}</title>
-    <link rel="stylesheet" href="/assets/styles.17.css" />
-    <link rel="icon" href="/assets/icon.png"/>
-    <meta name="description" content="Se hva som går på kino i dag og fremover – for hundrevis av kinosteder over hele Norge">
+    <link rel="stylesheet" href="/assets/styles.18.css" />
+    <link rel="icon" href="/assets/icon.png" />
+    <meta
+      name="description"
+      content="Se hva som går på kino i dag og fremover – for hundrevis av kinosteder over hele Norge"
+    />
   </head>
   <body class="no-js">
     <header role="banner">
+    {% block header %}{% endblock %}
+  </header>
 
-      {% set niceDay = date|format_date(pattern="EEEE d'.' MMMM", locale="no")|capitalize %}
-      <div>
-        <h1 aria-label="{{ location_name }} — {{ niceDay }}">
-            {{ location_name }}
-            <span aria-hidden="true">{{ niceDay }}</span>
-        </h1>
-    </div>
-    <nav>
-      <form action="{{ form_url }}" method="post">
-        <select id="select-location" name="location" aria-label="Sted">
-          {% for location in locations %}
-          <option value="{{ location.slug }}" {% if location.name is same as(location_name) %}selected{% endif %}>{{ location.name }}</option>
-          {% endfor %}
-        </select>
-        
-        <select id="select-date" name="date" data-location="{{ location_slug }}" aria-label="Dato">
-       
-        {% if date not in dates_with_movies %}
-            <option>Velg dag</option>
-        {% endif %}
-       
-        {% if dates_with_movies|length > 0 %}
-       
-            {% for day in dates_with_movies|filter(day => date(day) >= date("now"|date("d-m-Y"))) %}
-                <option value="{{ day }}" {% if date(day) == date(date) %}selected{% endif %}>{{ day|format_date(pattern="EEE d'.'M", locale="no")|capitalize }}</option>
-            {% endfor %}
-       
-        {% endif %}
-        </select>
-        
-      </form>
-    </nav>
-    </header>
-    
-    
     {% block content %}{% endblock %}
-    
-    <script src="/assets/scripts.2.js"></script>
+    <script src="/assets/scripts.3.js"></script>
   </body>
 </html>

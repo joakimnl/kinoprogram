@@ -1,10 +1,10 @@
 <?php
 /**
  * Finn alle kinoer i Filmweb og lagre lokasjon, filmer, forestillinger og plakat.
- * 
+ *
  * Denne filen finner alle kinoene som ligger i FilmWeb og henter kinoprogram inkl.
  * filmer, forestillinger, plakat og billettlenker.
- * 
+ *
  * @return void
  */
 
@@ -745,15 +745,15 @@ $letter_combos = array(
 /**
  * Filmweb sitt GraphQL-endpoint for kinosøk
  */
-function cinema_query($letter_combo = '') 
+function cinema_query($letter_combo = '')
 {
     return 'https://skynet.filmweb.no/MovieInfoQs/graphql/?query=query($searchText:String){cinemaQuery{searchForLocations(searchText:$searchText){name}}}&variables={"searchText":"'. urlencode($letter_combo) . '"}';
 }
 
 /**
  * Gi oss Filmweb sitt GraphQL-endpoint for filmsøk på en lokasjon
- */ 
-function movie_query($location = '') 
+ */
+function movie_query($location = '')
 {
     return 'https://skynet.filmweb.no/MovieInfoQs/graphql/?query=query($location:String){movieQuery{getCurrentMovies(location:$location,removePastShows:true){mainVersionId%20title%20genres%20lengthInMinutes%20rating%20poster{versions{url}}%20sanityImagePosterUrl%20shows{firmName%20showStart%20screenName%20ticketSaleUrl%20theaterName%20movieVersionId}}}}&variables={%22location%22:%22' . urlencode($location) . '%22}';
 }
@@ -767,22 +767,22 @@ foreach ($letter_combos as $combo) {
         $result = json_decode($request);
 
         $locations = $result->data->cinemaQuery->searchForLocations;
-        
+
         if ($result && !empty($locations)) {
 
             foreach($locations as $location) {
-                
+
                 if (!empty($location->name)) {
-                    
+
                     $location_array = array(
                         "name" => $location->name,
                         "slug" => get_slug($location->name)
                     );
-                   
+
                     if (!in_array($location_array, $all_locations)) {
-                        
+
                         array_push($all_locations, $location_array);
-                        
+
                         /**
                          * Hent filmer for denne kinoen
                          */
@@ -790,47 +790,50 @@ foreach ($letter_combos as $combo) {
 
                         $query_result = json_decode(file_get_contents(movie_query($location->name)));
                         $movies = $query_result->data->movieQuery->getCurrentMovies;
-                      
+
                         if ($query_result && !empty($movies)) {
-                      
+
                             $location_json = LOCATIONS_DIR . $location_array['slug'] . '.json';
-                      
+
                             file_put_contents($location_json, json_encode($movies));
-                      
+
                             foreach($movies as $movie) {
-                      
+
                                 if (!empty($movie->sanityImagePosterUrl)) {
-                        
+
                                     $filename = IMG_DIR . $movie->mainVersionId . ".webp";
-                        
+
                                     if (!file_exists($filename)) {
-                        
-                                        logg("– Laster ned plakat til " . $movie->title . "...");
-                        
+
                                         $poster_url = preg_replace('/auto=format/', 'fm=webp', $movie->sanityImagePosterUrl);
-                            
+
                                         list($width, $height) = getimagesize($poster_url);
-                            
-                                        $new_width = 450;
-                                        $ratio = $height / $width;
-                                        $new_height = intval($new_width * $ratio);
-                            
-                                        $image_p = imagecreatetruecolor($new_width, $new_height);
-                                        $image = imagecreatefromwebp($poster_url);
-                                        imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-                            
-                                        imagewebp($image_p, IMG_DIR . $movie->mainVersionId . ".webp", 50);
-                            
-                                        imagedestroy($image);
-                                        imagedestroy($image_p);
+
+                                        if ($width < 0 && $height > 0) {
+
+                                          logg("– Laster ned plakat til " . $movie->title . "...");
+
+                                          $new_width = 450;
+                                          $ratio = $height / $width;
+                                          $new_height = intval($new_width * $ratio);
+
+                                          $image_p = imagecreatetruecolor($new_width, $new_height);
+                                          $image = imagecreatefromwebp($poster_url);
+                                          imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+
+                                          imagewebp($image_p, IMG_DIR . $movie->mainVersionId . ".webp", 50);
+
+                                          imagedestroy($image);
+                                          imagedestroy($image_p);
+                                        }
                                     }
-                        
+
                                 } else {
                                     //logg("– Fikk ikke tak i plakat til " . $movie->title . "...");
                                 }
-                        
+
                             }
-                      
+
                         }
                     }
                 }
