@@ -228,13 +228,19 @@ div.error p {
 
 .cinema-picker {
     display: grid;
-    gap: 2rem;
+    gap: 1rem;
     padding: 1rem;
 }
 
 
 .cinema-picker a {
-    color: limegreen;
+    background: limegreen;
+    border-radius: 7px;
+    color: #000;
+    display: inline-block;
+    font-size: 1rem;
+    padding: 0.5em;
+    text-decoration: none;
 }
 
 .cinema-picker ul {
@@ -244,17 +250,10 @@ div.error p {
 }
 
 .cinema-picker ul:first-of-type {
-    font-size: 2rem;
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    padding: 0.5em 1em 0.5em 0;
 }
 .cinema-picker ul:first-of-type a {
-    background: limegreen;
-    border-radius: 7px;
-    color: #000;
-    display: block;
-    padding: 0.5em;
-    text-decoration: none;
+    font-size: 1.5rem;
 }
