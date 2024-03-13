@@ -6,29 +6,10 @@
 
 {% block content %} 
 
-
-<div class="cinema-picker">
-    <ul role="list">
-        <li><a href="/stavanger">Stavanger</a></li>
-        <li><a href="/bergen">Bergen</a></li>
-        <li><a href="/trondheim">Trondheim</a></li>
-        <li><a href="/oslo">Oslo</a></li>
-        <li><a href="/oslo-og-omegn">Oslo og omegn</a></li>
-        <li><a href="/sandvika">Sandvika</a></li>
-        <li><a href="/lillestrøm">Lillestrøm</a></li>
-        <li><a href="/ski">Ski</a></li>
-        <li><a href="/tromsø">Tromsø</a></li>
-        <li><a href="/kirkenes">Kirkenes</a></li>
-        <li><a href="/haugesund">Haugesund</a></li>
-        <li><a href="/drammen">Drammen</a></li>
-    </ul>
-
-    <ul role="list">
-        <li><a href="/sandnes">Sandnes</a></li>
-        {% for location in locations %}
-        <li><a href="/{{ location.slug }}">{{ location.name }}</a></li>
-        {% endfor %}
-    </ul>
-</div>
+<ul class="cinema-picker" role="list">
+    {% for location in locations|sort %}
+    <li><a href="/{{ location.slug }}">{{ location.name }}</a></li>
+    {% endfor %}
+</ul>
 
 {% endblock %}

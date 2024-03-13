@@ -775,8 +775,8 @@ foreach ($letter_combos as $combo) {
                 if (!empty($location->name)) {
 
                     $location_array = array(
-                        "name" => $location->name,
-                        "slug" => get_slug($location->name)
+                        "name" => trim($location->name),
+                        "slug" => get_slug(trim($location->name))
                     );
 
                     if (!in_array($location_array, $all_locations)) {
@@ -786,7 +786,7 @@ foreach ($letter_combos as $combo) {
                         /**
                          * Hent filmer for denne kinoen
                          */
-                        logg("🍿 Henter filmer for " . $location->name . "...");
+                        logg("🍿 Henter filmer for " . trim($location->name) . "...");
 
                         $query_result = json_decode(file_get_contents(movie_query($location->name)));
                         $movies = $query_result->data->movieQuery->getCurrentMovies;

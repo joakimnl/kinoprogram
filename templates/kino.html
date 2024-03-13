@@ -10,7 +10,7 @@
   </h1>
 </div>
 <nav>
-  <form action="{{ form_url }}" method="post">
+  <form class="cinema-date-select" action="{{ form_url }}" method="post">
     <select id="select-location" name="location" aria-label="Sted">
       {% for location in locations %}
       <option value="{{ location.slug }}" {% if location.name is same as(location_name) %}selected{% endif %}>{{
