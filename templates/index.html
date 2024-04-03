@@ -1,15 +1,16 @@
-{% extends "page.html" %}
-
-{% block header %}
+{% extends "page.html" %} {% block header %}
 <h1>Kinoprogram</h1>
-{% endblock %}
+{% endblock %} {% block content %}
 
-{% block content %} 
+<label id="filter">
+  <span>Filtrer kinoer</span>
+  <input list="cinema-locations" id="cinema-filter" name="cinema-filter" />
+</label>
 
-<ul class="cinema-picker" role="list">
-    {% for location in locations|sort %}
-    <li><a href="/{{ location.slug }}">{{ location.name }}</a></li>
-    {% endfor %}
+<ul id="cinema-locations" class="cinema-picker" role="list">
+  {% for location in locations|sort %}
+  <li><a href="/{{ location.slug }}">{{ location.name }}</a></li>
+  {% endfor %}
 </ul>
 
 {% endblock %}

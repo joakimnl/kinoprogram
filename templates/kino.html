@@ -18,7 +18,8 @@
       {% endfor %}
     </select>
 
-    <select id="select-date" name="date" data-location="{{ location_slug }}" data-current-date="{{ date }}" aria-label="Dato">
+    <select id="select-date" name="date" data-location="{{ location_slug }}" data-current-date="{{ date }}"
+      aria-label="Dato">
 
       {% if date not in dates_with_movies %}
       <option value="{{ date }}">Velg dag</option>
@@ -91,6 +92,14 @@ date(show.showStart|date("d-m-Y")) == date(date) and date(show.showStart|date("d
 {% elseif dates_with_movies|length > 0 %}
 <div class="error">
   <p>Her var det ingen filmer, gitt.</p>
+
+  {% if dates_with_movies|length > 0 %}
+  <p>Prøv en annen dag:
+    {% for day in dates_with_movies|filter(day => date(day) >= date("now"|date("d-m-Y"))) %}
+    <a href="{{ location_slug }}/{{day}}">{{ day|format_date(pattern="EE d'.'M", locale="no")|capitalize }}</a>
+    {% endfor %}
+  </p>
+  {% endif %}
 </div>
 
 {% endif %}

@@ -3,20 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kinoprogram – {{ location_name ? location_name : "Velg sted" }}</title>
-    <link rel="stylesheet" href="/assets/styles.19.css" />
+    <title>{{ location_name ? "På kino – " ~ location_name : "Kinoprogram – Velg sted" }}</title>
+    <link rel="stylesheet" href="/assets/styles.20.css" />
     <link rel="icon" href="/assets/icon.png" />
     <meta
       name="description"
-      content="Se hva som går på kino i dag og fremover – for hundrevis av kinosteder over hele Norge"
+      content="Oversiktlig kinoprogram med lenker til billettkjøp for hundrevis av kinosteder over hele Norge"
     />
   </head>
   <body class="no-js">
-    <header role="banner">
-    {% block header %}{% endblock %}
-  </header>
+    <header role="banner">{% block header %}{% endblock %}</header>
 
     {% block content %}{% endblock %}
-    <script src="/assets/scripts.4.js"></script>
+    <script src="/assets/scripts.5.js"></script>
   </body>
 </html>
