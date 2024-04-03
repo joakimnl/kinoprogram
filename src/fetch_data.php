@@ -8,13 +8,13 @@
  * @return void
  */
 
-require __DIR__ . '/functions.php';
+require __DIR__ . "/functions.php";
 
 /**
  * Filmweb sin API gir resultater på to bokstaver, så her er alle tobokstavs-
  * kombinasjoner som gir mening å søke etter.
  */
-$letter_combos = array(
+$letter_combos = [
   "AA",
   "AB",
   "AC",
@@ -739,108 +739,114 @@ $letter_combos = array(
   "ÅZ",
   "ÅÆ",
   "ÅØ",
-  "ÅÅ"
-);
+  "ÅÅ",
+];
 
 /**
  * Filmweb sitt GraphQL-endpoint for kinosøk
  */
-function cinema_query($letter_combo = '')
+function cinema_query($letter_combo = "")
 {
-    return 'https://skynet.filmweb.no/MovieInfoQs/graphql/?query=query($searchText:String){cinemaQuery{searchForLocations(searchText:$searchText){name}}}&variables={"searchText":"'. urlencode($letter_combo) . '"}';
+  return 'https://skynet.filmweb.no/MovieInfoQs/graphql/?query=query($searchText:String){cinemaQuery{searchForLocations(searchText:$searchText){name}}}&variables={"searchText":"' .
+    urlencode($letter_combo) .
+    '"}';
 }
 
 /**
  * Gi oss Filmweb sitt GraphQL-endpoint for filmsøk på en lokasjon
  */
-function movie_query($location = '')
+function movie_query($location = "")
 {
-    return 'https://skynet.filmweb.no/MovieInfoQs/graphql/?query=query($location:String){movieQuery{getCurrentMovies(location:$location,removePastShows:true){mainVersionId%20title%20genres%20lengthInMinutes%20rating%20poster{versions{url}}%20sanityImagePosterUrl%20shows{firmName%20showStart%20screenName%20ticketSaleUrl%20theaterName%20movieVersionId}}}}&variables={%22location%22:%22' . urlencode($location) . '%22}';
+  return 'https://skynet.filmweb.no/MovieInfoQs/graphql/?query=query($location:String){movieQuery{getCurrentMovies(location:$location,removePastShows:true){mainVersionId%20title%20genres%20lengthInMinutes%20rating%20poster{versions{url}}%20sanityImagePosterUrl%20shows{firmName%20showStart%20screenName%20ticketSaleUrl%20theaterName%20movieVersionId}}}}&variables={%22location%22:%22' .
+    urlencode($location) .
+    "%22}";
 }
 
 $all_locations = [];
 
 foreach ($letter_combos as $combo) {
+  if ($request = file_get_contents(cinema_query($combo))) {
+    $result = json_decode($request);
 
-    if ($request = file_get_contents(cinema_query($combo))) {
+    $locations = $result->data->cinemaQuery->searchForLocations;
 
-        $result = json_decode($request);
+    if ($result && !empty($locations)) {
+      foreach ($locations as $location) {
+        if (!empty($location->name)) {
+          $location_array = [
+            "name" => trim($location->name),
+            "slug" => get_slug(trim($location->name)),
+          ];
 
-        $locations = $result->data->cinemaQuery->searchForLocations;
+          if (!in_array($location_array, $all_locations)) {
+            array_push($all_locations, $location_array);
 
-        if ($result && !empty($locations)) {
+            /**
+             * Hent filmer for denne kinoen
+             */
+            logg("🍿 Henter filmer for " . trim($location->name) . "...");
 
-            foreach($locations as $location) {
+            $query_result = json_decode(file_get_contents(movie_query($location->name)));
+            $movies = $query_result->data->movieQuery->getCurrentMovies;
 
-                if (!empty($location->name)) {
+            if ($query_result && !empty($movies)) {
+              $location_json = LOCATIONS_DIR . $location_array["slug"] . ".json";
 
-                    $location_array = array(
-                        "name" => trim($location->name),
-                        "slug" => get_slug(trim($location->name))
+              file_put_contents($location_json, json_encode($movies));
+
+              foreach ($movies as $movie) {
+                if (!empty($movie->sanityImagePosterUrl)) {
+                  $filename = IMG_DIR . $movie->mainVersionId . ".webp";
+
+                  if (!file_exists($filename)) {
+                    $poster_url = preg_replace(
+                      "/auto=format/",
+                      "fm=webp",
+                      $movie->sanityImagePosterUrl
                     );
 
-                    if (!in_array($location_array, $all_locations)) {
+                    list($width, $height) = getimagesize($poster_url);
 
-                        array_push($all_locations, $location_array);
+                    if ($width < 0 && $height > 0) {
+                      logg("– Laster ned plakat til " . $movie->title . "...");
 
-                        /**
-                         * Hent filmer for denne kinoen
-                         */
-                        logg("🍿 Henter filmer for " . trim($location->name) . "...");
+                      $new_width = 450;
+                      $ratio = $height / $width;
+                      $new_height = intval($new_width * $ratio);
 
-                        $query_result = json_decode(file_get_contents(movie_query($location->name)));
-                        $movies = $query_result->data->movieQuery->getCurrentMovies;
+                      $image_p = imagecreatetruecolor($new_width, $new_height);
+                      $image = imagecreatefromwebp($poster_url);
+                      imagecopyresampled(
+                        $image_p,
+                        $image,
+                        0,
+                        0,
+                        0,
+                        0,
+                        $new_width,
+                        $new_height,
+                        $width,
+                        $height
+                      );
 
-                        if ($query_result && !empty($movies)) {
+                      imagewebp($image_p, IMG_DIR . $movie->mainVersionId . ".webp", 50);
 
-                            $location_json = LOCATIONS_DIR . $location_array['slug'] . '.json';
-
-                            file_put_contents($location_json, json_encode($movies));
-
-                            foreach($movies as $movie) {
-
-                                if (!empty($movie->sanityImagePosterUrl)) {
-
-                                    $filename = IMG_DIR . $movie->mainVersionId . ".webp";
-
-                                    if (!file_exists($filename)) {
-
-                                        $poster_url = preg_replace('/auto=format/', 'fm=webp', $movie->sanityImagePosterUrl);
-
-                                        list($width, $height) = getimagesize($poster_url);
-
-                                        if ($width < 0 && $height > 0) {
-
-                                          logg("– Laster ned plakat til " . $movie->title . "...");
-
-                                          $new_width = 450;
-                                          $ratio = $height / $width;
-                                          $new_height = intval($new_width * $ratio);
-
-                                          $image_p = imagecreatetruecolor($new_width, $new_height);
-                                          $image = imagecreatefromwebp($poster_url);
-                                          imagecopyresampled($image_p, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
-
-                                          imagewebp($image_p, IMG_DIR . $movie->mainVersionId . ".webp", 50);
-
-                                          imagedestroy($image);
-                                          imagedestroy($image_p);
-                                        }
-                                    }
-
-                                } else {
-                                    //logg("– Fikk ikke tak i plakat til " . $movie->title . "...");
-                                }
-
-                            }
-
-                        }
+                      imagedestroy($image);
+                      imagedestroy($image_p);
                     }
+                  }
+                } else {
+                  //logg("– Fikk ikke tak i plakat til " . $movie->title . "...");
                 }
+              }
             }
+          }
         }
+      }
     }
+  }
 }
 
-file_put_contents( LOCATIONS_DIR . 'all_locations.json', json_encode($all_locations));
-delete_old_locations('-1 day 5 minutes');
+file_put_contents(LOCATIONS_DIR . "all_locations.json", json_encode($all_locations));
+delete_old_locations("-1 day 5 minutes");
+generate_sitemap($all_locations);
